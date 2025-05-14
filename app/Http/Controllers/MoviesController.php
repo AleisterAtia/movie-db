@@ -12,7 +12,8 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        //
+        $movies = Movies::latest()->paginate(6);
+        return view('homepage', compact('movies'));
     }
 
     /**
