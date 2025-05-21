@@ -3,7 +3,7 @@
 @section('navInmov', 'active')
 @section('content')
 
-    <h1>Form Movie</h1>
+    <h1>Form Movies</h1>
 
     <form action="{{ route('movies.store') }}" method="POST" enctype="multipart/form-data">
         @csrf

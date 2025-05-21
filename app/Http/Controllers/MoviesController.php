@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Movies;
 use App\Models\Categories;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
 
 class MoviesController extends Controller
 {
@@ -53,7 +55,7 @@ class MoviesController extends Controller
         $imagePath = $request->file('cover_image')->store('cover_images', 'public');
 
         // Simpan data ke database
-        Movie::create([
+        Movies::create([
             'title' => $validated['title'],
             'cover_image' => $imagePath,
             'slug' => Str::slug($validated['title']),

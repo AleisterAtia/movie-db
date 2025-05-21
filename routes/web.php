@@ -15,6 +15,7 @@ Route::get('/movie/{id}/{slug}', [MoviesController::class, 'detailMovie']);
 Route::get('/movie/create', [MoviesController::class, 'create'])->name('movie.create');
 Route::post('/movie/store', [MoviesController::class, 'store'])->name('movies.store');
 Route::get('/category/{id}', [CategoriesController::class, 'show']);
+Route::get('/category/{id}', [CategoriesController::class, 'tampil']);
 
 
 // Route::get('/movie/{id}/{slug}', [MoviesController::class, 'detail_movie']);
