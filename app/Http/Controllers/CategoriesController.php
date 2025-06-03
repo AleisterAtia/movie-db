@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
+use App\Models\categories;
+use App\Models\Movie;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
@@ -12,7 +13,8 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        //
+        // $movies = Movie::paginate(10);
+        // return view('pages.home', compact('movies'));
     }
 
     /**
@@ -34,15 +36,19 @@ class CategoriesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Categories $categories)
+    public function show($id)
     {
-        //
+        $category = categories::findOrFail($id);
+
+        $movies= Movie::where('category_id', $id)->paginate(6);
+
+        return view('pages.show', compact('category','movies'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Categories $categories)
+    public function edit(categories $categories)
     {
         //
     }
@@ -50,7 +56,7 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categories $categories)
+    public function update(Request $request, categories $categories)
     {
         //
     }
@@ -58,7 +64,7 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categories $categories)
+    public function destroy(categories $categories)
     {
         //
     }

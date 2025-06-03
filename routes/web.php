@@ -1,21 +1,30 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\MoviesController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\AuthController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/', [MoviesController::class, 'index']);
+Route::get('/', [MovieController::class, 'index']);
+Route::get('/movie/{id}/{slug}', [MovieController::class, 'detailMovie'])->name('movie.detail');
 
-Route::get('/movie/{id}/{slug}', [MoviesController::class, 'detailMovie']);
-Route::get('/movie/create', [MoviesController::class, 'create'])->name('movie.create');
-Route::post('/movie/store', [MoviesController::class, 'store'])->name('movies.store');
+Route::get('/movies/{id}/edit', [MovieController::class, 'edit'])->name('movie.edit');
+
+Route::get('/movie/create', [MovieController::class, 'create'])->middleware('auth');
+Route::post('/movie/store', [MovieController::class, 'store'])->middleware('auth')->name('movies.store');
 Route::get('/category/{id}', [CategoriesController::class, 'show']);
-Route::get('/category/{id}', [CategoriesController::class, 'tampil']);
+Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout');
+Route::get('/movies', [MovieController::class, 'list'])->name('movie.list');
+Route::delete('/movie/{id}', [MovieController::class, 'destroy'])->name('movie.destroy')->middleware('auth');
 
 
-// Route::get('/movie/{id}/{slug}', [MoviesController::class, 'detail_movie']);
+

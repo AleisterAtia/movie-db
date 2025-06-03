@@ -2,44 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movies;
-use App\Models\Categories;
+use App\Models\Movie;
+use App\Models\categories;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-
-class MoviesController extends Controller
+class MovieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $movies = Movies::select('id', 'title', 'synopsis', 'cover_image', 'year', 'slug')->paginate(6);
-        return view('homepage', compact('movies'));
-
+        $movies = Movie::paginate(6);
+        return view('pages.home', compact('movies'));
     }
 
     public function detailMovie($id, $slug)
     {
-        $movie = Movies::find($id);
-        // dd($movie);
-        return view('movie_detail', compact('movie'));
+        $movie = Movie::find($id);
+        return view('pages.detail_movie', compact('movie'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $categories = Categories::all();
-        return view('form_movie');
+        $categories = categories::all();
+        return view('pages.movie_form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -55,7 +43,7 @@ class MoviesController extends Controller
         $imagePath = $request->file('cover_image')->store('cover_images', 'public');
 
         // Simpan data ke database
-        Movies::create([
+        Movie::create([
             'title' => $validated['title'],
             'cover_image' => $imagePath,
             'slug' => Str::slug($validated['title']),
@@ -68,35 +56,33 @@ class MoviesController extends Controller
         return redirect('/')->with('success', 'Movie has been added!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Movies $movies)
+    public function list()
     {
-        //
+        $movies = Movie::with('category')->get();
+        return view('pages.list_movie', compact('movies'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Movies $movies)
+
+    public function edit($id)
     {
-        //
+        $movies = Movie::findOrFail($id);
+        $categories = Categories::all(); // agar bisa pilih ulang kategori saat edit
+        return view('pages.edit_movie', compact('movies', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Movies $movies)
+    public function destroy($id)
     {
-        //
+        $movie = Movie::findOrFail($id);
+
+        // Hapus file cover image jika ada
+        if ($movie->cover_image && Storage::exists('public/' . $movie->cover_image)) {
+            Storage::delete('public/' . $movie->cover_image);
+        }
+
+        // Hapus data movie
+        $movie->delete();
+
+        return redirect()->route('movie.list')->with('success', 'Movie berhasil dihapus.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Movies $movies)
-    {
-        //
-    }
 }
