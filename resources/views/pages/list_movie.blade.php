@@ -36,10 +36,14 @@
                                             class="btn btn-outline-primary btn-sm me-1">
                                             <i class="bi bi-eye">Detail</i>
                                         </a>
-                                        <a href="{{ route('movie.edit', $movie->id) }}"
-                                            class="btn btn-outline-warning btn-sm me-1">
-                                            <i class="bi bi-pencil-square">Edit</i>
-                                        </a>
+
+                                        @if (auth()->user()->role !== 'user')
+                                            <a href="{{ route('movie.edit', $movie->id) }}"
+                                                class="btn btn-outline-warning btn-sm me-1">
+                                                <i class="bi bi-pencil-square">Edit</i>
+                                            </a>
+                                        @endif
+
                                         <form action="{{ route('movie.destroy', $movie->id) }}" method="POST"
                                             class="d-inline" onsubmit="return confirm('Yakin ingin menghapus movie ini?')">
                                             @csrf

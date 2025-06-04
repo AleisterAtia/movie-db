@@ -46,6 +46,7 @@
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">Login</a>
+                                {{-- <button class="btn btn-outline-light" href="{{ route('login') }}">Login</button> --}}
                             </li>
                         @endguest
 

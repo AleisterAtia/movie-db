@@ -6,6 +6,7 @@ use App\Models\Movie;
 use App\Models\categories;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
@@ -72,17 +73,26 @@ class MovieController extends Controller
 
     public function destroy($id)
     {
-        $movie = Movie::findOrFail($id);
 
-        // Hapus file cover image jika ada
-        if ($movie->cover_image && Storage::exists('public/' . $movie->cover_image)) {
-            Storage::delete('public/' . $movie->cover_image);
+        if (Gate::allows('delete-movie')) {
+
+
+
+            $movie = Movie::findOrFail($id);
+
+            // Hapus file cover image jika ada
+            if ($movie->cover_image && Storage::exists('public/' . $movie->cover_image)) {
+                Storage::delete('public/' . $movie->cover_image);
+            }
+
+            // Hapus data movie
+            $movie->delete();
+
+            return redirect()->route('movie.list')->with('success', 'Movie berhasil dihapus.');
         }
 
-        // Hapus data movie
-        $movie->delete();
+        abort(403);
 
-        return redirect()->route('movie.list')->with('success', 'Movie berhasil dihapus.');
     }
 
 }

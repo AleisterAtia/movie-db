@@ -29,7 +29,9 @@
 
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="Write the synopsis here" id="synopsis" name="synopsis"
-                            style="height: 120px" value= '{{ old('title', $movies->synopsis) }}' required></textarea>
+                            style="height: 120px" required>{{ old('synopsis', $movies->synopsis) }}</textarea>
+
+
                         <label for="synopsis">Synopsis</label>
                     </div>
 

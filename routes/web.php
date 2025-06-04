@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RoleAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\CategoriesController;
@@ -12,7 +13,7 @@ Route::get('/', function () {
 Route::get('/', [MovieController::class, 'index']);
 Route::get('/movie/{id}/{slug}', [MovieController::class, 'detailMovie'])->name('movie.detail');
 
-Route::get('/movies/{id}/edit', [MovieController::class, 'edit'])->name('movie.edit');
+Route::get('/movies/{id}/edit', [MovieController::class, 'edit'])->middleware('auth', RoleAdmin::class)->name('movie.edit');
 
 Route::get('/movie/create', [MovieController::class, 'create'])->middleware('auth');
 Route::post('/movie/store', [MovieController::class, 'store'])->middleware('auth')->name('movies.store');
